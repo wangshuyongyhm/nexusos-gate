@@ -1,0 +1,15 @@
+# doc_consistency.yaml 样本 — 文档一致性检查目标声明（1959 示例化配套）
+#
+# 部署位：$NEXUS_HOME/gate/checks.d/doc_consistency.yaml（可选——C9 已内置
+# 于 code 场景，本样本演示如何对你的文档目录单独启用/调参）
+# 语义：改 md 时验证文中引用的路径/脚本实际存在（fail-soft WARN）。
+scenario: code
+items:
+  - id: C9X
+    name: 文档一致性（自定义目标）
+    auto: true
+    severity: WARN
+    check:
+      type: doc_consistency
+      files: "{changed_files}"
+      project_root: "{project_root}"

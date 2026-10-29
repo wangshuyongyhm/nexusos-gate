@@ -1,0 +1,14 @@
+# persist_pool_ledger.yaml 样本 — 台账 check 声明式启用（1959 示例化）
+#
+# 部署位：$NEXUS_HOME/gate/checks.d/persist_pool_ledger.yaml
+# 语义：WARN 台账健康检查（事实型恒 pass；vault/取号脚本不可得 = WARN skip）。
+# 取号脚本默认按 vault 布局组合路径解析；他机自定义脚本用 env
+# NEXUS_POOL_NEXT_ID_SCRIPT（支持 ${NEXUS_VAULT_ROOT}/${NEXUS_HOME} 占位）。
+scenario: persist
+items:
+  - id: P8
+    name: 池台账健康
+    auto: true
+    severity: WARN
+    check:
+      type: persist_pool_ledger

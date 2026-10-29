@@ -1,0 +1,33 @@
+# 示例场景 1：pre-commit 质量门（通用——不依赖任何 NEXUS 概念）
+# 用法: NEXUS_GATES_DIR=<本目录的父目录>/gates python -m nexusos_gate.cli pre_commit
+#       context 传 {change_dir, min_py_lines}（见 required_context）
+scenario: pre_commit
+description: 代码提交前的最小质量门：diff 范围收敛 + 无注释掉的代码块 + 产物非空
+
+required_context:
+  - name: change_dir
+  - name: min_py_lines
+
+items:
+  - id: PC1
+    name: 变更范围已知
+    severity: REJECT
+    check:
+      type: git_diff_scope
+      cwd: "{change_dir}"
+      max_files: 20
+
+  - id: PC2
+    name: 无注释掉的代码残留
+    severity: WARN
+    check:
+      type: comment_out_detection
+      cwd: "{change_dir}"
+
+  - id: PC3
+    name: 产物行数达标
+    severity: REJECT
+    check:
+      type: line_count
+      path: "{change_dir}/output/report.md"
+      min_lines: 30

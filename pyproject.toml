@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nexusos-gate"
+version = "1.0.0"
+description = "NEXUS Gate — 声明式门禁引擎（场景 YAML + checks 插件池）"
+readme = "README.md"
+requires-python = ">=3.10"
+# PEP 621 旧式 text 表（非 SPDX 表达式）——保留 License classifier 不被新版
+# setuptools(≥77, PEP639) 拒绝：license="MIT" 字符串形态会与 classifier 冲突致
+# 干净 venv 安装失败（1609 实测 InvalidConfigError）。
+license = {text = "MIT"}
+authors = [{name = "NEXUS Contributors"}]
+classifiers = ["License :: OSI Approved :: MIT License"]
+# 池#72 定调"gate/xdr 零重依赖"。pyyaml 是 gate_engine 顶部硬依赖
+# （缺失即 sys.exit），如实声明（Task630 决策，详见 report）；psycopg2
+# 仅插件告警写 PG 用、fail-open 可选，不进运行时依赖。
+dependencies = ["pyyaml>=5.4", "nexusos-common>=1.0,<2"]  # 1957 锚点单源（design §3.2 钉 <2）
+
+# nexusos.gate.checks 插件协议（1959 单3，design §5）：entry_points 组注入，
+# 外部包可同协议注册 check；engine 端 sorted(name) 稳定序加载。
+# 首批=原五私人 check（插件化×2/示例化×2/剥离×1 改造后的 OSS 化形态）。
+[project.entry-points."nexusos.gate.checks"]
+config_key_refs = "nexusos_gate.etc.gates._checks.config_key_refs"
+codegraph_wrapper = "nexusos_gate.etc.gates._checks.codegraph_wrapper"
+complexity_aware = "nexusos_gate.etc.gates._checks.complexity_aware"
+doc_consistency = "nexusos_gate.etc.gates._checks.doc_consistency"
+e2e_suite_evidence = "nexusos_gate.etc.gates._checks.e2e_suite_evidence"
+persist_pool_ledger = "nexusos_gate.persist_pool_ledger"
+
+# 开源仓库落位（M1 脱敏建仓）后更新为真实主页；切片器不再补注（单一真源）
+[project.urls]
+Homepage = "https://github.com/nexus-family/nexusos-gate"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"nexusos_gate.etc.checks.examples" = ["*.yaml", "*.md"]

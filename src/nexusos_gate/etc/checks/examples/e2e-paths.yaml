@@ -1,0 +1,26 @@
+# e2e-paths.yaml 样本 — e2e_suite_evidence（G18）用户配置
+#
+# 部署位：$NEXUS_HOME/gate/e2e-paths.yaml（或 env NEXUS_GATE_E2E_PATHS 直指本文件）
+# 语义：改动面命中 system_path_patterns 任一 = 系统改动单 → done 前须跑 e2e
+#       套件并留证据；无本配置 = 该 check WARN skip（不 REJECT）。
+# 占位：${NEXUS_VAULT_ROOT}/${NEXUS_HOME} 读取时展开（vault 不可得则该值
+#       留原样——建议相对口径就不需要占位）。
+version: 1
+
+# e2e 套件入口（vault/workspace 相对或 ${NEXUS_VAULT_ROOT} 绝对）
+suite_entry: ${NEXUS_VAULT_ROOT}/your/e2e-suite/run-suite.sh
+
+# 系统改动路径模式（fnmatch 语义，* 跨 / 匹配）——按你的系统面改
+system_path_patterns:
+  - your/system/pypi/**
+  - your/core/scripts/*.sh
+
+# 只读复测/零改动反信号——任务书明示 → 豁免
+read_only_markers:
+  - 只读复测
+  - 零改动
+
+# 任务书侧系统路径字样（第二信号兜底）
+task_md_system_markers:
+  - pypi/
+  - e2e-suite
