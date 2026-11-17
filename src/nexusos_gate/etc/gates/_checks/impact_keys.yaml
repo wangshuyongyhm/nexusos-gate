@@ -1,0 +1,34 @@
+# L2 配置键扫描 allowlist（初始来源：H5 事故 + 现有 gate context + cred_type + hook event）
+# 维护策略：nexus-monitor 检测新高频字面量时提示加入，不追求穷举
+# 用途：主控写任务书 frontmatter impact_keys 时的参考清单（不是强制只扫这些）
+# check 函数的 keys 来自任务书 frontmatter impact_keys 或正文提取，allowlist 用于"主控没声明时给默认建议"
+
+# 凭据类型（Task441/447 体系）
+cred_types:
+  - search_cred
+  - orchestrator_search_cred
+  - dispatch_cred
+  - done_cred
+
+# Hook 事件名（ZCode/cursor schema）
+hook_events:
+  - PreToolUse
+  - UserPromptSubmit
+  - PostToolUse
+  - SessionStart
+  - Stop
+
+# Hook 脚本名（H5 同款：代码改了漏挂 config）
+hook_scripts:
+  - oplog_guard
+  - interaction_guard
+  - agent_prompt_guard
+  - commit_msg_advisor
+
+# 通用忽略（出现太多，扫了全是噪音）
+ignore:
+  - status
+  - config
+  - task
+  - print
+  - logger

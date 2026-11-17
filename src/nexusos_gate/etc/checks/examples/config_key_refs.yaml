@@ -1,0 +1,19 @@
+# config_key_refs.yaml 样本 — 扫描目标声明式启用（1959 插件化）
+#
+# 部署位：$NEXUS_HOME/gate/checks.d/config_key_refs.yaml（示例参数，按需改）
+# 语义：dispatch 前配置键关联检查（代码改了漏挂 config 防护）——扫描范围
+#       全部显式声明；无 scope 且无 NEXUS_AGENT_CFG_DIRS env 且 vault 不可得
+#       = WARN skip（不扫别人机器的私人配置目录）。
+scenario: dispatch
+items:
+  - id: D7C
+    name: 配置键关联（私配置声明式启用）
+    auto: true
+    severity: WARN
+    check:
+      type: config_key_refs
+      max_uncovered: 0
+      # 扫描范围：你的配置文件/目录（绝对路径；也可用 env NEXUS_AGENT_CFG_DIRS 冒号分隔清单）
+      scope:
+        - ${NEXUS_VAULT_ROOT}/your/configs/
+        - ${NEXUS_HOME}/providers.json

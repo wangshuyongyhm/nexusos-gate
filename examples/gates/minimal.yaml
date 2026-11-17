@@ -1,0 +1,24 @@
+# 示例场景 3：最小入门（两个检查跑通引擎全链——场景加载→插件分发→汇总）
+# 用法: NEXUS_GATES_DIR=.../gates python -m nexusos_gate.cli minimal
+#       context 传 {report_path}
+scenario: minimal
+description: 最小演示：文件存在 + 行数达标（5 分钟接入你自己的门禁的起点）
+
+required_context:
+  - name: report_path
+
+items:
+  - id: M1
+    name: 产物存在
+    severity: REJECT
+    check:
+      type: file_exists
+      path: "{report_path}"
+
+  - id: M2
+    name: 产物非敷衍
+    severity: REJECT
+    check:
+      type: line_count
+      path: "{report_path}"
+      min_lines: 10

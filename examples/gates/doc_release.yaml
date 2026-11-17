@@ -1,0 +1,31 @@
+# 示例场景 2：文档发布门（通用——doc/code 一致性 + 链接健康）
+# 用法: NEXUS_GATES_DIR=.../gates python -m nexusos_gate.cli doc_release
+#       context 传 {project_root}
+scenario: doc_release
+description: 文档发布前检查：文档-代码符号一致 + 无新增断链 + README 与代码同步
+
+required_context:
+  - name: project_root
+
+items:
+  - id: DR1
+    name: 文档符号引用有效
+    severity: REJECT
+    check:
+      type: doc_consistency
+      project_root: "{project_root}"
+
+  - id: DR2
+    name: 无新增断链
+    severity: WARN
+    check:
+      type: no_new_broken_links
+      project_root: "{project_root}"
+
+  - id: DR3
+    name: 关键字段存在
+    severity: REJECT
+    check:
+      type: field_check
+      path: "{project_root}/README.md"
+      field: "Usage"
